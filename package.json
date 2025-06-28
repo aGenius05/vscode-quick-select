@@ -22,7 +22,7 @@
     "onCommand:extension.selectParenthesisOuter",
     "onCommand:extension.selectSquareBracketsOuter",
     "onCommand:extension.selectCurlyBracketsOuter",
-    "onCommand:extension.selectAngleBrackets",
+    "onCommand:extension.selectTag",
     "onCommand:extension.selectInTag"
   ],
   "main": "./out/src/extension",
@@ -73,8 +73,8 @@
         "title": "Quick Select: Select outside curly brackets"
       },
       {
-        "command": "extension.selectAngleBrackets",
-        "title": "Quick Select: Select inside angled brackets"
+        "command": "extension.selectTag",
+        "title": "Quick Select: Select tag"
       },
       {
         "command": "extension.selectInTag",
@@ -149,7 +149,7 @@
         "when": "editorFocus"
       },
       {
-        "command": "extension.selectAngleBrackets",
+        "command": "extension.selectTag",
         "key": "ctrl+k shift+,",
         "mac": "cmd+k shift+,",
         "when": "editorFocus"

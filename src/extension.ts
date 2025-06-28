@@ -19,6 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand('extension.selectCurlyBracketsOuter', matchingSelect.bind(_, { start_char: "{", end_char: "}", outer: true })));
   context.subscriptions.push(vscode.commands.registerCommand('extension.selectAngleBrackets', matchingSelect.bind(_, { start_char: "<", end_char: ">" })));
   context.subscriptions.push(vscode.commands.registerCommand('extension.selectInTag', matchingSelect.bind(_, { start_char: ">", end_char: "<" })));
+  context.subscriptions.push(vscode.commands.registerCommand('extension.selectTag', tagSelect));
 }
 
 // Replacables
@@ -207,9 +208,7 @@ function matchingSelect({start_char, end_char, outer = false}: MatchingSelectOpt
     let ends = findOccurances(doc, line, end_char);
     let start = starts.find(a => a > character);
     let end = ends.find(a => a > character);
-    let start_index = starts.indexOf(start);
-    let end_index = ends.indexOf(end);
-    let start_pos: vscode.Position = findPrevious(doc, line, start_char, character, end_char) || new vscode.Position(line, starts[start_index]);
+    let start_pos: vscode.Position = findPrevious(doc, line, start_char, character, end_char) || new vscode.Position(line, start);
     if (!start_pos) { return s };
     let end_pos: vscode.Position = findNext(doc, start_pos.line, end_char, start_pos.character + 1, start_char);
     if (start_pos && end_pos) {
@@ -227,7 +226,38 @@ function matchingSelect({start_char, end_char, outer = false}: MatchingSelectOpt
     }
     return s;
   })
-  if (success && start_char === "<") {
-    vscode.commands.executeCommand("editor.action.addSelectionToNextFindMatch")
+}
+
+function tagSelect(){
+let editor = vscode.window.activeTextEditor;
+  if (!editor) { return; };
+  let success = false;
+  let doc = editor.document
+  let sel = editor.selections
+  let startPos = sel.map(s => {
+    let {line, character} = s.active;
+    let cursor = findPrevious(doc, line, "<", character, ">");
+    if(cursor){
+      success = true;
+    }else{
+      cursor = s.active;
+    }
+    return new vscode.Selection(cursor, cursor);
+  });
+  if(!success){
+    return;
   }
+  editor.selections = startPos;
+  matchingSelect({start_char: "<", end_char: ">"});
+  let startSel = editor.selections;
+  vscode.commands.executeCommand("editor.emmet.action.matchTag");
+  let newSel = editor.selections;
+  editor.selections = newSel.concat(startSel.map(s => {
+    if(doc.getText(s).startsWith("/")){
+      return new vscode.Selection(new vscode.Position(s.anchor.line, s.anchor.character+1), s.active)
+    }else{
+      return s;
+    }
+  }));
+  vscode.commands.executeCommand("editor.action.addSelectionToNextFindMatch");
 }

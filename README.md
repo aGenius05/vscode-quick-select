@@ -80,7 +80,7 @@ Or if you have already made in inner selection, use the same key combination aga
 
 <kbd>⌘</kbd><kbd>k</kbd> <kbd><</kbd>
 
-This also selects the matching tag.
+This also selects the matching tag. The cursor has to be inside the tag.
 
 <kbd>⌘</kbd><kbd>k</kbd> <kbd>></kbd>
 
