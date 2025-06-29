@@ -119,7 +119,7 @@ extension.selectInTag
 extension.goNext
 extension.goNextInclude
 extension.goPrevious
-extension.goPreviousInclud
+extension.goPreviousInclude
 ~~~
 
 ## License
