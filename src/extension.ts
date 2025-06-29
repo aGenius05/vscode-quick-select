@@ -1,5 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+import { reverse } from 'dns';
 import * as vscode from 'vscode';
 
 // this method is called when your extension is activated
@@ -20,6 +21,10 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand('extension.selectAngleBrackets', matchingSelect.bind(_, { start_char: "<", end_char: ">" })));
   context.subscriptions.push(vscode.commands.registerCommand('extension.selectInTag', matchingSelect.bind(_, { start_char: ">", end_char: "<" })));
   context.subscriptions.push(vscode.commands.registerCommand('extension.selectTag', tagSelect));
+  context.subscriptions.push(vscode.commands.registerCommand('extension.goNext', go.bind(_, {reverse: false, include: false})));
+  context.subscriptions.push(vscode.commands.registerCommand('extension.goNextInclude', go.bind(_, {reverse: false, include: true})));
+  context.subscriptions.push(vscode.commands.registerCommand('extension.goPrevious', go.bind(_, {reverse: true, include: false})));
+  context.subscriptions.push(vscode.commands.registerCommand('extension.goPreviousInclude', go.bind(_, {reverse: true, include: true})));
 }
 
 // Replacables
@@ -229,7 +234,7 @@ function matchingSelect({start_char, end_char, outer = false}: MatchingSelectOpt
 }
 
 function tagSelect(){
-let editor = vscode.window.activeTextEditor;
+  let editor = vscode.window.activeTextEditor;
   if (!editor) { return; };
   let success = false;
   let doc = editor.document
@@ -260,4 +265,33 @@ let editor = vscode.window.activeTextEditor;
     }
   }));
   vscode.commands.executeCommand("editor.action.addSelectionToNextFindMatch");
+}
+
+interface goOptions { reverse: boolean, include: boolean }
+async function go({reverse, include}: goOptions){
+  const search = await vscode.window.showInputBox({
+    prompt: "Inserisci il carattere da cercare"
+  });
+  let editor = vscode.window.activeTextEditor;
+  if (!editor) { return; };
+  let doc = editor.document
+  let sel = editor.selections
+  editor.selections = sel.map(s => {
+    let {line, character} = s.active;
+    let starts = findOccurances(doc, line, search);
+    let start;
+    if(reverse === false){
+      start = starts.find(a => a>character);
+      if(include === false){
+        start--;
+      }
+    }else{
+      start = starts.reverse().find(a => a<character);
+      if(include === true){
+        start --;
+      }
+    }
+    let position = new vscode.Position(line, start) || s.active;
+    return new vscode.Selection(position, position);
+  });
 }

@@ -23,7 +23,11 @@
     "onCommand:extension.selectSquareBracketsOuter",
     "onCommand:extension.selectCurlyBracketsOuter",
     "onCommand:extension.selectTag",
-    "onCommand:extension.selectInTag"
+    "onCommand:extension.selectInTag",
+    "onCommand:extension.goNext",
+    "onCommand:extension.goNextInclude",
+    "onCommand:extension.goPrevious",
+    "onCommand:extension.goPreviousInclude"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -158,6 +162,30 @@
         "command": "extension.selectInTag",
         "key": "ctrl+k shift+.",
         "mac": "cmd+k shift+.",
+        "when": "editorFocus"
+      },
+      {
+        "command": "extension.goNext",
+        "key": "ctrl+k ctrl+f",
+        "mac": "cmd+k ctrl+f",
+        "when": "editorFocus"
+      },
+      {
+        "command": "extension.goNextInclude",
+        "key": "ctrl+k shift+f",
+        "mac": "cmd+k shift+f",
+        "when": "editorFocus"
+      },
+      {
+        "command": "extension.goPrevious",
+        "key": "ctrl+k ctrl+t",
+        "mac": "cmd+k ctrl+t",
+        "when": "editorFocus"
+      },
+      {
+        "command": "extension.goPreviousInclude",
+        "key": "ctrl+k shift+t",
+        "mac": "cmd+k shift+t",
         "when": "editorFocus"
       }
     ],
