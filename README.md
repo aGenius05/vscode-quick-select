@@ -88,6 +88,17 @@ This matches the tag value.
 
 ![brackets](https://github.com/dbankier/vscode-quick-select/raw/master/screens/tags.gif)
 
+you can also resemble vim movements f, F, t, T respectively with:
+<kbd>⌘</kbd><kbd>k</kbd> <kbd>⌃</kdb><kbd>f</kbd>
+
+<kbd>⌘</kbd><kbd>k</kbd> <kbd>F</kbd>
+
+<kbd>⌘</kbd><kbd>k</kbd> <kbd>⌃</kdb><kbd>t</kbd>
+
+<kbd>⌘</kbd><kbd>k</kbd> <kbd>T</kbd>
+
+the editor will ask what to match on and it can be also a phrase, not just a single word.
+
 ### Customisation
 
 ~~~
@@ -104,6 +115,10 @@ extension.selectSquareBracketsOuter
 extension.selectCurlyBracketsOuter
 extension.selectAngleBrackets
 extension.selectInTag
+extension.goNext
+extension.goNextInclude
+extension.goPrevious
+extension.goPreviousInclud
 ~~~
 
 ## License
